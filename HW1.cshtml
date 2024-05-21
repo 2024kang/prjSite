@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "HW1";
+}
+
+<h1>HomeWork 01</h1>
+<div class="row row-cols-1 row-cols-md-3 g-4" id="maindiv"></div>
+
+@section Styles {
+    <style>
+
+
+    </style>
+}
+
+
+@section Scripts {
+    <script src="~/js/travel.js"></script>
+    <script>
+
+        const myUI = document.querySelector("#maindiv");
+
+        // console.log(spots.CommonFormat.Section[0].file.img[0].text);
+       
+        let t1 = "";
+       
+
+
+        spots.CommonFormat.Section.forEach(pic => {  /* (pic.file.img[0].text} */
+
+            t1 += `
+        
+                                            <div class="col">
+                                                <div class="card" id="image-div">
+                                                                            <img src="${pic.file.img.length > 0 ? pic.file.img[0].text : 'https://via.placeholder.com/150'}" class="card-img-top" alt="...">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">${pic.stitle}</h5>
+                                                        <p class="card-text">${pic.xbody.substring(0, 100)}...</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+
+        });
+
+
+        console.log(myUI);
+       myUI.innerHTML = t1;
+    </script>
+}
