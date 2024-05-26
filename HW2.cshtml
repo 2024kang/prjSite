@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewData["Title"] = "HW2";
+}
+
+<h1>HW2</h1>
+
+<h1>檢查帳號是否重複</h1>
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <h1>Register</h1>
+        <form method="post" action="~/api/register">
+            <div class="mb-3">
+                <label for="InputName" class="form-label">姓名:</label>
+                <input type="text" class="form-control" id="InputName" name="name">
+                <p id="remind" style="color:red;" />
+            </div>
+            <div class="mb-3">
+                <label for="InputEmail" class="form-label">電子郵件:</label>
+                <input type="email" class="form-control" id="InputEmail" name="email">
+            </div>
+            <div class="mb-3">
+                <label for="InputAge" class="form-label">年紀:</label>
+                <input type="number" class="form-control" id="InputAge" name="age">
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnsubmit">送出</button>
+        </form>
+        <div id="div1" class="alert alert-info mt-3" style="background-color:lightblue;"></div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        const remind = document.getElementById('remind');
+        const divResult = document.querySelector('#div1');
+        const btnSubmit = document.querySelector('#btnsubmit');
+        const inpName = document.querySelector('#InputName');
+        const inpEmail = document.querySelector('#InputEmail');
+        const inpAge = document.querySelector('#InputAge');
+        btnSubmit.addEventListener('click', async (event) => {
+            event.preventDefault();
+            console.log(inpName.value);
+
+            let url = `@Url.Content("~/api/CheckAccount/")?name=${inpName.value}&age=${inpAge.value}&email=${inpEmail.value}`;
+            console.log(inpName);
+            let response = await fetch(url);
+            let data = await response.text();
+            //data=>"True","False"
+            if (data == "True") {
+                remind.textContent = "*帳號已被註冊，請重新輸入";
+            }
+            else {
+                divResult.textContent = inpName.value + "註冊成功"  ;
+                remind.textContent = "";
+            }
+        });
+    </script>
+}
