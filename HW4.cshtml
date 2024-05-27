@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "HW4";
+}
+
+<h1>台北市景點Homework4</h1>
+
+<div class="row mb-3">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <nav>
+            <ul class="pagination" id="pagebtn">
+            </ul>
+        </nav>
+    </div>
+
+    <div class="col-3">
+        <input type="search" class="form-control" placeholder="搜尋景點資料" id="inputsearch">
+    </div>
+</div>
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4" id="maindiv">
+</div>
+@section Styles {
+    <style>
+        img {
+            width: 400px;
+            height: 200px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/js/travel.js"></script>
+    <script>
+        const myUI = document.querySelector("#maindiv");
+        const inpSearch = document.querySelector('#inputsearch');
+        const myPage = document.querySelector('#pagebtn');
+
+        const searchdata = {
+            "categoryId": 0,
+            "keyword": "公園",
+            "page": 1,
+            "pageSize": 9,
+            "sortType": "SpotId",
+            "sortBy": "asc"
+        }
+
+        const pageingHandler = page => {
+            searchdata.page = page;
+            loadSpot();
+        }
+
+        //顯示景點資料
+        const loadSpot = async () => {
+            const url = 'https://localhost:7030/api/Spots';  //'@Url.Content("~/api/SPOTS")';//
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(searchdata),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const data = await response.json();
+            console.log(data);
+
+            const spots = data.spotsResult.map(pic => {
+
+                return (` <div class="card">
+                                                  <img src="${pic.spotImage}" class="card-img-top" alt="${pic.spotTitle}">
+                                                   <div class="card-body">
+                                                   <h5 class="card-title">${pic.spotTitle}</h5>
+                                                             <p class="card-text">${pic.spotDescription.substring(0, 100)}</p>
+                                                     </div>
+                                                     <div class="card-footer">
+                                                     <small class="text-body-secondary">${pic.address}</small>
+                                                     </div>
+                                                     </div>`)
+            });
+
+            myUI.innerHTML = spots.join("");
+
+
+            //顯示分頁按鈕
+            let Pagebtn = "";
+            for (let i = 1, max = data.totalPages; i <= max; i++) {
+                Pagebtn += `<li class="pageitem" onclick="pageingHandler(${i})"><a class="page-link">${i}</a></li>`
+            }
+            myPage.innerHTML = Pagebtn;
+
+        };
+
+
+        loadSpot();
+
+
+
+        // 關鍵字搜尋
+        inpSearch.addEventListener('keydown', event => {
+            if (event.keyCode === 13) {
+                //更改屬性
+                searchdata.keyword = event.target.value;
+                loadSpot();
+            }
+        });
+
+
+
+    </script>
+}
+
