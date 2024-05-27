@@ -16,6 +16,14 @@
     <div class="col-3">
         <input type="search" class="form-control" placeholder="搜尋景點資料" id="inputsearch">
     </div>
+
+    <label>選擇排序</label>
+
+    <select class="form-select" aria-label="Default select example" id="rank">
+     
+        <option value="asc" id="a" selected>升冪</option>
+        <option value="desc" id="b">降冪</option>
+    </select>
 </div>
 
 
@@ -37,19 +45,44 @@
         const inpSearch = document.querySelector('#inputsearch');
         const myPage = document.querySelector('#pagebtn');
 
+        const dataasc = document.querySelector('#a');
+        const datadesc = document.querySelector('#b');
+
+        //顯示分類
+        let category = async () => {
+            let url3 = "https://localhost:7030/api/Categories";
+            let response3 = await fetch(url);
+
+
+        }
+        
+        
+
         const searchdata = {
             "categoryId": 0,
-            "keyword": "公園",
+            "keyword": "",
             "page": 1,
             "pageSize": 9,
-            "sortType": "SpotId",
-            "sortBy": "asc"
+            "sortType": "asc",
+            "sortBy": "SpotId"
         }
+
 
         const pageingHandler = page => {
             searchdata.page = page;
             loadSpot();
         }
+
+
+        document.querySelector("#rank").addEventListener('change', event => {
+            //b 就是 event
+            searchdata.sortType = event.target.value;
+            console.log(event.target.value);
+            loadSpot();
+        });
+
+
+
 
         //顯示景點資料
         const loadSpot = async () => {
@@ -87,6 +120,8 @@
                 Pagebtn += `<li class="pageitem" onclick="pageingHandler(${i})"><a class="page-link">${i}</a></li>`
             }
             myPage.innerHTML = Pagebtn;
+
+          
 
         };
 
