@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewData["Title"] = "HW3";
+}
+
+<h1>HW3 完成會員註冊功能</h1>
+
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <form method="post" action="~/api/register" id="myform">
+            <div class="mb-3">
+                <label for="InputName" class="form-label">姓名:</label>
+                <input type="text" class="form-control" id="InputName" name="name">
+                <p id="remind" style="color:red;" />
+            </div>
+            <div class="mb-3">
+                <label for="InputEmail" class="form-label">電子郵件:</label>
+                <input type="email" class="form-control" id="InputEmail" name="email">
+            </div>
+            <div class="mb-3">
+                <label for="InputPwd" class="form-label">密碼:</label>
+                <input type="password" class="form-control" id="InputPwd" name="Password">
+                <p id="ppwd" style="color:red;" />
+            </div>
+            <div class="mb-3">
+                <label for="InputCheckPwd" class="form-label">確認密碼:</label>
+                <input type="password" class="form-control" id="InputCheckPwd" name="checkpwd">
+                <p id="pcheckpwd" style="color:red;" />
+            </div>
+            <div class="mb-3">
+                <label for="InputAge" class="form-label">年紀:</label>
+                <input type="number" class="form-control" id="InputAge" name="age">
+            </div>
+            <div class="mb-3">
+                <label for="InputPic" class="form-label">頭像:</label>
+                <input type="file" class="form-control" id="InputPic" name="avatar">
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnsubmit">送出</button>
+        </form>
+        <div id="div1" class="alert alert-info mt-3" style="background-color:lightblue;"></div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+ 
+        //重複時，出現提示
+        const remind = document.getElementById('remind');
+        const ppwd = document.getElementById('ppwd');
+        const pcheckpwd = document.getElementById('pcheckpwd');
+
+        //最下方訊息
+        const divResult = document.querySelector('#div1');
+      
+        const inpName = document.querySelector('#InputName');
+        const inpEmail = document.querySelector('#InputEmail');
+        const inputPwd = document.querySelector('#InputPwd');
+        const inputCheckPwd = document.querySelector('#InputCheckPwd');
+        const inpAge = document.querySelector('#InputAge');
+
+        const btnSubmit = document.querySelector('#btnsubmit');
+
+        inpName.addEventListener('blur',async()=>{
+     
+           let url = `@Url.Content("~/api/CheckAccount/")?name=${inpName.value}&age=${inpAge.value}&email=${inpEmail.value}`;
+            console.log(inpName);
+            let response = await fetch(url);
+            let data = await response.text();
+            //data=>"True","False"
+            if (data == "True") {
+                remind.textContent = "帳號已被註冊，請重新輸入";
+            }
+            else {
+                divResult.textContent = inpName.value + "註冊成功";
+                remind.textContent = "";
+            }
+        });
+
+        
+            inputCheckPwd.addEventListener('blur', () => {
+                if (inputPwd.value == "") { 
+                    ppwd.innerText = '請輸入密碼';
+                    return;
+                }
+                if (inputPwd.value == inputCheckPwd.value) {
+                    pcheckpwd.innerText = '輸入正確';
+                }
+                }
+        });
+
+
+        btnSubmit.addEventListener('click', async (event) => {
+            event.preventDefault();
+            console.log(inpName.value);
+            
+            const form2 = document.querySelector('#myform');
+            const formData = new FormData(form2);
+
+            
+             let url2 = `@Url.Content("~/api/register/")` ;
+            let response2  = await fetch(url2,{
+            method : 'POST',
+            body : formData
+            });
+            let data2  = await response2.text();
+            divResult.textContent = data2;
+
+             });
+
+    </script>
+}
+
