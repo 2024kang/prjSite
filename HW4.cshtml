@@ -5,8 +5,7 @@
 <h1>台北市景點Homework4</h1>
 
 <div class="row mb-3">
-    <div class="col-3"></div>
-    <div class="col-6">
+    <div class="col-3">
         <nav>
             <ul class="pagination" id="pagebtn">
             </ul>
@@ -16,131 +15,168 @@
     <div class="col-3">
         <input type="search" class="form-control" placeholder="搜尋景點資料" id="inputsearch">
     </div>
-
-    <label>選擇排序</label>
-
-    <select class="form-select" aria-label="Default select example" id="rank">
-     
-        <option value="asc" id="a" selected>升冪</option>
-        <option value="desc" id="b">降冪</option>
-    </select>
 </div>
-
-
-<div class="row row-cols-1 row-cols-md-3 g-4" id="maindiv">
-</div>
-@section Styles {
-    <style>
-        img {
-            width: 400px;
-            height: 200px;
-        }
-    </style>
-}
-
-@section Scripts {
-    <script src="~/js/travel.js"></script>
-    <script>
-        const myUI = document.querySelector("#maindiv");
-        const inpSearch = document.querySelector('#inputsearch');
-        const myPage = document.querySelector('#pagebtn');
-
-        const dataasc = document.querySelector('#a');
-        const datadesc = document.querySelector('#b');
-
-        //顯示分類
-        let category = async () => {
-            let url3 = "https://localhost:7030/api/Categories";
-            let response3 = await fetch(url);
-
-
-        }
+<div class="row mb-6">
+    <div class="col-3">
+        <label>選擇排序</label>
+        <select class="form-select" aria-label="Default select example" id="rank">
+            <option value="asc" id="a" selected>升冪</option>
+            <option value="desc" id="b">降冪</option>
+        </select>
+        <div class="col-3">
+            <nav>
+                <ul class="pagination" id="categorybtn">
+                    <li class="pageitem" value="0" onclick="categoryHandler(event)"><a class="page-link">ALL</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-3">
+            <div class="form-check mt-2">
+                <label> 顯示筆數:</label>
+                <label><input type="radio" class="pagecount" name="pagecount" value="15" />15</label>
+                <label><input type="radio" class="pagecount" name="pagecount" value="21" checked />21</label>
+                <label><input type="radio" class="pagecount" name="pagecount" value="30" />30</label>
+                <label><input type="radio" class="pagecount" name="pagecount" value="60" />60</label>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="maindiv">
         
-        
-
-        const searchdata = {
-            "categoryId": 0,
-            "keyword": "",
-            "page": 1,
-            "pageSize": 9,
-            "sortType": "asc",
-            "sortBy": "SpotId"
-        }
-
-
-        const pageingHandler = page => {
-            searchdata.page = page;
-            loadSpot();
-        }
-
-
-        document.querySelector("#rank").addEventListener('change', event => {
-            //b 就是 event
-            searchdata.sortType = event.target.value;
-            console.log(event.target.value);
-            loadSpot();
-        });
-
-
-
-
-        //顯示景點資料
-        const loadSpot = async () => {
-            const url = 'https://localhost:7030/api/Spots';  //'@Url.Content("~/api/SPOTS")';//
-            const response = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(searchdata),
-                headers: {
-                    'Content-Type': 'application/json'
+        @section Styles {
+            <style>
+                img {
+                    width: 400px;
+                    height: 200px;
                 }
-            })
-            const data = await response.json();
-            console.log(data);
+            </style>
+        }
 
-            const spots = data.spotsResult.map(pic => {
+        @section Scripts {
+            <script src="~/js/travel.js"></script>
+            <script>
+                let testDiv = document.querySelectorAll('#maindiv');
+                console.log(testDiv[0]);
+                const myUI = document.querySelector("#maindiv");
+                const inpSearch = document.querySelector('#inputsearch');
+                const myPage = document.querySelector('#pagebtn');
+                const myCategory = document.querySelector("#categorybtn");
 
-                return (` <div class="card">
-                                                  <img src="${pic.spotImage}" class="card-img-top" alt="${pic.spotTitle}">
-                                                   <div class="card-body">
-                                                   <h5 class="card-title">${pic.spotTitle}</h5>
-                                                             <p class="card-text">${pic.spotDescription.substring(0, 100)}</p>
-                                                     </div>
-                                                     <div class="card-footer">
-                                                     <small class="text-body-secondary">${pic.address}</small>
-                                                     </div>
-                                                     </div>`)
-            });
-
-            myUI.innerHTML = spots.join("");
-
-
-            //顯示分頁按鈕
-            let Pagebtn = "";
-            for (let i = 1, max = data.totalPages; i <= max; i++) {
-                Pagebtn += `<li class="pageitem" onclick="pageingHandler(${i})"><a class="page-link">${i}</a></li>`
-            }
-            myPage.innerHTML = Pagebtn;
-
-          
-
-        };
-
-
-        loadSpot();
+                const dataasc = document.querySelector('#a');
+                const datadesc = document.querySelector('#b');
 
 
 
-        // 關鍵字搜尋
-        inpSearch.addEventListener('keydown', event => {
-            if (event.keyCode === 13) {
-                //更改屬性
-                searchdata.keyword = event.target.value;
+
+                const searchdata = {
+                    "categoryId": 0,
+                    "keyword": "",
+                    "page": 1,
+                    "pageSize": 21,
+                    "sortType": "asc",
+                    "sortBy": "SpotId"
+                };
+
+                const categoryHandler = category => {
+                    searchdata.categoryId = category.target.value
+                    console.log(searchdata.categoryId);
+                    loadSpot();
+                };
+
+                const pageingHandler = page => {
+                    searchdata.page = page;
+                    loadSpot();
+                };
+
+
+                document.querySelector("#rank").addEventListener('change', event => {
+                    //b 就是 event
+                    searchdata.sortType = event.target.value;
+                    loadSpot();
+                });
+
+
+
+
+                //顯示景點資料
+                const loadSpot = async () => {
+                    const url = 'https://localhost:7030/api/Spots';  //'@Url.Content("~/api/SPOTS")';//
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify(searchdata),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    const data = await response.json();
+                    //console.log(data);
+
+                    const spots = data.spotsResult.map(pic => {
+
+                        return (` <div class="card">
+                                   <img src="${pic.spotImage}" class="card-img-top" alt="${pic.spotTitle}">
+                                   <div class="card-body">
+                                   <h5 class="card-title">${pic.spotTitle}</h5>
+                                   <p class="card-text">${pic.spotDescription.substring(0, 100)}</p>
+                                   </div>
+                                   <div class="card-footer">
+                                   <small class="text-body-secondary">${pic.address}</small>
+                                   </div>
+                                   </div>`)
+                    });
+
+                    myUI.innerHTML = spots.join("");
+
+
+                    //顯示分頁按鈕
+                    let Pagebtn = "";
+                    for (let i = 1, max = data.totalPages; i <= max; i++) {
+                        Pagebtn += `<li class="pageitem" onclick="pageingHandler(${i})"><a class="page-link">${i}</a></li>`
+                    }
+                    myPage.innerHTML = Pagebtn;
+
+                    //顯示分類 categoryId
+                    let CategotyIdbtn = "";
+                    let url3 = "https://localhost:7030/api/Categories";
+                    let response3 = await fetch(url3);
+                    let data3 = await response3.json();
+                    console.log(data3);
+                   for(var Category of data3) {
+                        console.log(Category.categoryName);
+                        if (Category.categoryName != null)
+                            CategotyIdbtn += `<li class="pageitem" onclick = "categoryHandler(event)" value="${Category.categoryId}"><a class="page-link">${Category.categoryName}</a></li>`;
+                    } 
+                    myCategory.innerHTML = CategotyIdbtn;
+
+                   
+
+                };
+
+
                 loadSpot();
-            }
-        });
 
 
 
-    </script>
-}
+                // 關鍵字搜尋
+                inpSearch.addEventListener('keydown', event => {
+                    if (event.keyCode === 13) {
+                        //更改屬性
+                        searchdata.keyword = event.target.value;
+                        loadSpot();
+                    }
+                });
 
+
+                //顯示筆數
+                let datanum = document.querySelectorAll('.pagecount');
+                
+                //console.log(datanum.length);
+                datanum.forEach(num => { 
+               
+                    num.addEventListener('click', (event) => {
+                        searchdata.pageSize = event.target.value;
+                        loadSpot();
+                });
+                    
+                })
+            </script>
+        }
