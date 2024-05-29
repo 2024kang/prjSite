@@ -4,33 +4,26 @@
 
 <h1>台北市景點Homework4</h1>
 
-<div class="row mb-3">
-    <div class="col-3">
+<div class="row mb-3" ;">
+    <div class="col-6" ">
         <nav>
             <ul class="pagination" id="pagebtn">
             </ul>
         </nav>
     </div>
-
-    <div class="col-3">
+    <div class="col-3"  ;">
         <input type="search" class="form-control" placeholder="搜尋景點資料" id="inputsearch">
     </div>
 </div>
-<div class="row mb-6">
-    <div class="col-3">
-        <label>選擇排序</label>
-        <select class="form-select" aria-label="Default select example" id="rank">
-            <option value="asc" id="a" selected>升冪</option>
-            <option value="desc" id="b">降冪</option>
-        </select>
-        <div class="col-3">
+<div class="row mb-6" ;">  
+        <div class="col-8" ;">
             <nav>
                 <ul class="pagination" id="categorybtn">
                     <li class="pageitem" value="0" onclick="categoryHandler(event)"><a class="page-link">ALL</a></li>
                 </ul>
             </nav>
         </div>
-        <div class="col-3">
+        <div class="col-4" ;">
             <div class="form-check mt-2">
                 <label> 顯示筆數:</label>
                 <label><input type="radio" class="pagecount" name="pagecount" value="15" />15</label>
@@ -38,9 +31,15 @@
                 <label><input type="radio" class="pagecount" name="pagecount" value="30" />30</label>
                 <label><input type="radio" class="pagecount" name="pagecount" value="60" />60</label>
             </div>
+        <div>
+            <label >選擇排序</label>
+            <select class="form-select" aria-label="Default select example" id="rank" >
+                <option value="asc" id="a" selected>升冪</option>
+                <option value="desc" id="b">降冪</option>
+            </select>
         </div>
     </div>
-    <div class="row row-cols-1 row-cols-md-3 g-4" id="maindiv">
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="maindiv" style="border:3px solid pink;"></div>
         
         @section Styles {
             <style>
